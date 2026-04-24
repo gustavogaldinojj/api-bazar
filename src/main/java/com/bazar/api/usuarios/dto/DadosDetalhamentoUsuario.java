@@ -11,6 +11,6 @@ public record DadosDetalhamentoUsuario(
         Endereco endereco) {
 
     public DadosDetalhamentoUsuario(Usuario usuario) {
-        this(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getEndereco());
+        this(usuario.getId(), usuario.getNome(), usuario.getSenha(),  usuario.getEmail(), usuario.getEndereco());
     }
 }

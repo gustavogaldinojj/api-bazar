@@ -6,6 +6,6 @@ import com.bazar.api.usuarios.model.Usuario;
 public record DadosListaUsuario(Long id, String nome, String senha, String email, Endereco endereco) {
 
     public DadosListaUsuario(Usuario usuario){
-        this(usuario.getId(), usuario.getSenha(), usuario.getNome(), usuario.getEmail(), usuario.getEndereco());
+        this(usuario.getId(), usuario.getNome(), usuario.getSenha(), usuario.getEmail(), usuario.getEndereco());
     }
 }

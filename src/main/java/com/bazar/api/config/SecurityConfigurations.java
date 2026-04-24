@@ -23,6 +23,8 @@ public class SecurityConfigurations {
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
