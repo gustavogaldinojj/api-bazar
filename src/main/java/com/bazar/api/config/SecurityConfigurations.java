@@ -4,9 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfigurations {
 
     @Bean
@@ -22,6 +24,10 @@ public class SecurityConfigurations {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/roupas/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/roupas/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/roupas/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/roupas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/usuarios/**").permitAll()

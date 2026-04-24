@@ -1,11 +1,14 @@
 package com.bazar.api.roupas.controller;
 
+import com.bazar.api.roupas.dto.DadosAtualizaRoupa;
 import com.bazar.api.roupas.dto.DadosCadastroRoupa;
 import com.bazar.api.roupas.dto.DadosDetalhamentoRoupa;
 import com.bazar.api.roupas.dto.DadosListarRoupa;
 import com.bazar.api.roupas.model.Roupa;
 import com.bazar.api.roupas.repository.RoupaRepository;
-import com.bazar.api.usuarios.repository.UsuarioRepository;
+import com.bazar.api.usuarios.dto.DadosCadastroUsuario;
+import com.bazar.api.usuarios.dto.DadosDetalhamentoUsuario;
+import com.bazar.api.usuarios.model.Usuario;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/roupas")
+@RequestMapping("roupas")
 public class RoupaController {
 
     @Autowired
@@ -23,21 +27,44 @@ public class RoupaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroRoupa dados) {
+    public ResponseEntity cadastrarRoupa(@RequestBody @Valid DadosCadastroRoupa dados,  UriComponentsBuilder uriComponentsBuilder) {
 
         var roupa = new Roupa(dados);
         repository.save(roupa);
 
-        return ResponseEntity.ok().build();
+        var uri = uriComponentsBuilder.path("/roupas/{id}").buildAndExpand(roupa.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoRoupa(roupa));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListarRoupa>> listar(Pageable pageable) {
+    public ResponseEntity<Page<DadosListarRoupa>> listarRoupa(Pageable pageable) {
 
         var page = repository.findAllByAtivoTrue(pageable)
                 .map(DadosListarRoupa::new);
 
         return ResponseEntity.ok(page);
+    }
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity atualizarRoupa(
+            @PathVariable Long id,
+            @RequestBody @Valid DadosAtualizaRoupa dados){
+
+        var roupa = repository.getReferenceById(id);
+        roupa.atualizar(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoRoupa(roupa));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluirRoupa(@PathVariable Long id){
+
+        var roupa = repository.getReferenceById(id);
+        roupa.excluir();
+
+        return ResponseEntity.noContent().build();
     }
 
 }
