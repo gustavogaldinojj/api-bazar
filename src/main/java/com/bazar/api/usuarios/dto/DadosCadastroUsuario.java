@@ -9,10 +9,10 @@ public record DadosCadastroUsuario(
         @NotBlank
         String nome,
         @NotBlank
+        String senha,
+        @NotBlank
         @Email
         String email,
-        @NotBlank
-        String senha,
         @NotNull
         @Valid
         DadosEndereco endereco) {

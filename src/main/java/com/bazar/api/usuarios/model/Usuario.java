@@ -31,6 +31,7 @@ public class Usuario {
         this.ativo = true;
         this.nome = dados.nome();
         this.email = dados.email();
+        this.senha = dados.senha();
         this.endereco = new Endereco(dados.endereco());
     }
 

@@ -26,7 +26,7 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<DadosDetalhamentoUsuario> cadastrar(
+    public ResponseEntity cadastrar(
             @RequestBody
             @Valid
             DadosCadastroUsuario dados, UriComponentsBuilder uriComponentsBuilder
