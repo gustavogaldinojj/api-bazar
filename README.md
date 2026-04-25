@@ -74,7 +74,7 @@ cd api-bazar
 
 4. Execute o projeto:
 ```
-mvn spring-boot:run
+.\mvnw spring-boot:run
 ```
 
 ---
