@@ -4,8 +4,7 @@ import com.bazar.api.usuarios.dto.DadosAtualizaUsuario;
 import com.bazar.api.usuarios.dto.DadosCadastroUsuario;
 import com.bazar.api.usuarios.dto.DadosDetalhamentoUsuario;
 import com.bazar.api.usuarios.dto.DadosListaUsuario;
-import com.bazar.api.usuarios.model.Usuario;
-import com.bazar.api.usuarios.repository.UsuarioRepository;
+import com.bazar.api.usuarios.service.UsuarioService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
@@ -18,64 +17,59 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioService service;
 
     @PostMapping
     @Transactional
     public ResponseEntity cadastrar(
-            @RequestBody
-            @Valid
-            DadosCadastroUsuario dados, UriComponentsBuilder uriComponentsBuilder
+            @RequestBody @Valid DadosCadastroUsuario dados,
+            UriComponentsBuilder uriBuilder
     ){
-        var usuario = new Usuario(dados);
-        repository.save(usuario);
+        var usuario = service.cadastrar(dados);
 
-        var uri = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
+        var uri = uriBuilder.path("/usuarios/{id}")
+                .buildAndExpand(usuario.getId())
+                .toUri();
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoUsuario(usuario));
-
+        return ResponseEntity.created(uri)
+                .body(new DadosDetalhamentoUsuario(usuario));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListaUsuario>> listar(
             @ParameterObject
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
-
-        var page = repository.findAllByAtivoTrue(pageable)
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable
+    ){
+        var page = service.listar(pageable)
                 .map(DadosListaUsuario::new);
 
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id){
+        var usuario = service.detalhar(id);
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+    }
+
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity atualizar(@PathVariable Long id,
-                                    @RequestBody @Valid DadosAtualizaUsuario dados){
-        var usuario = repository.getReferenceById(id);
-        usuario.atualizarInformacoes(dados);
-
+    public ResponseEntity atualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid DadosAtualizaUsuario dados
+    ){
+        var usuario = service.atualizar(id, dados);
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id){
-        var usuario = repository.getReferenceById(id);
-        usuario.excluir();
-
+        service.excluir(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
-
-        var usuario = repository.findByIdAndAtivoTrue(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou inativo"));
-
-        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 }

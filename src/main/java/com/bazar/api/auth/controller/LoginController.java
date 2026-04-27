@@ -20,7 +20,8 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody DadosLogin dados){
 
-        var usuario = repository.findByEmail(dados.email());
+        var usuario = repository.findByEmail(dados.email())
+                .orElse(null);
 
         if(usuario == null){
             return ResponseEntity.status(404).body("Usuário não encontrado");

@@ -23,15 +23,21 @@ public class SecurityConfigurations {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+
+                        // ROTAS LIVRES
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/movimentacoes/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/roupas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/roupas/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/roupas/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/roupas/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .build();

@@ -4,11 +4,7 @@ import com.bazar.api.roupas.dto.DadosAtualizaRoupa;
 import com.bazar.api.roupas.dto.DadosCadastroRoupa;
 import com.bazar.api.roupas.dto.DadosDetalhamentoRoupa;
 import com.bazar.api.roupas.dto.DadosListarRoupa;
-import com.bazar.api.roupas.model.Roupa;
-import com.bazar.api.roupas.repository.RoupaRepository;
-import com.bazar.api.usuarios.dto.DadosCadastroUsuario;
-import com.bazar.api.usuarios.dto.DadosDetalhamentoUsuario;
-import com.bazar.api.usuarios.model.Usuario;
+import com.bazar.api.roupas.service.RoupaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,36 +19,40 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class RoupaController {
 
     @Autowired
-    private RoupaRepository repository;
+    private RoupaService service;
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrarRoupa(@RequestBody @Valid DadosCadastroRoupa dados,  UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity cadastrarRoupa(
+            @RequestBody @Valid DadosCadastroRoupa dados,
+            UriComponentsBuilder uriBuilder) {
 
-        var roupa = new Roupa(dados);
-        repository.save(roupa);
+        var roupa = service.cadastrar(dados);
 
-        var uri = uriComponentsBuilder.path("/roupas/{id}").buildAndExpand(roupa.getId()).toUri();
+        var uri = uriBuilder.path("/roupas/{id}")
+                .buildAndExpand(roupa.getId())
+                .toUri();
 
-        return ResponseEntity.created(uri).body(new DadosDetalhamentoRoupa(roupa));
+        return ResponseEntity.created(uri)
+                .body(new DadosDetalhamentoRoupa(roupa));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListarRoupa>> listarRoupa(Pageable pageable) {
 
-        var page = repository.findAllByAtivoTrue(pageable)
+        var page = service.listar(pageable)
                 .map(DadosListarRoupa::new);
 
         return ResponseEntity.ok(page);
     }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity atualizarRoupa(
             @PathVariable Long id,
             @RequestBody @Valid DadosAtualizaRoupa dados){
 
-        var roupa = repository.getReferenceById(id);
-        roupa.atualizar(dados);
+        var roupa = service.atualizar(id, dados);
 
         return ResponseEntity.ok(new DadosDetalhamentoRoupa(roupa));
     }
@@ -61,8 +61,7 @@ public class RoupaController {
     @Transactional
     public ResponseEntity excluirRoupa(@PathVariable Long id){
 
-        var roupa = repository.getReferenceById(id);
-        roupa.excluir();
+        service.excluir(id);
 
         return ResponseEntity.noContent().build();
     }
