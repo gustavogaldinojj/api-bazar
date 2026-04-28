@@ -76,7 +76,6 @@ cd api-bazar
 ```
 .\mvnw spring-boot:run
 ```
-
 ---
 
 ## 📡 Endpoints (exemplo)
@@ -100,6 +99,11 @@ cd api-bazar
 | DELETE | /produtos/{id} | Remove produto   |
 
 ---
+
+### Testes Unitarios
+```
+./mvnw test -Dtest=RoupaServiceTest  
+```
 
 ## 🔐 Segurança
 
