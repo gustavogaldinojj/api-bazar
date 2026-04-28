@@ -7,15 +7,17 @@ import com.bazar.api.domain.roupas.dto.DadosListarRoupa;
 import com.bazar.api.domain.roupas.service.RoupaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("roupas")
+@RequestMapping("/roupas")
 public class RoupaController {
 
     @Autowired
@@ -38,7 +40,9 @@ public class RoupaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListarRoupa>> listarRoupa(Pageable pageable) {
+    public ResponseEntity<Page<DadosListarRoupa>> listarRoupa(
+            @ParameterObject
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
 
         var page = service.listar(pageable)
                 .map(DadosListarRoupa::new);
@@ -65,5 +69,4 @@ public class RoupaController {
 
         return ResponseEntity.noContent().build();
     }
-
 }
