@@ -1,129 +1,149 @@
-# 🛒 API Bazar
+# 🛍️ API Bazar
 
-API REST desenvolvida para gerenciamento de itens de um bazar, permitindo o controle de produtos, usuários e operações básicas de CRUD.
-
-## 🚀 Objetivo
-
-O projeto tem como objetivo fornecer um back-end robusto para aplicações de gestão de bazar, podendo ser integrado a front-ends (como Angular) ou outros sistemas.
+API REST desenvolvida em **Java + Spring Boot** para gerenciamento de um sistema de bazar, permitindo o controle de usuários, roupas e movimentações de estoque.
 
 ---
 
-## 🧠 Funcionalidades
+## 🚀 Tecnologias utilizadas
 
-- Cadastro de usuários  
-- Listagem de usuários  
-- Cadastro de produtos  
-- Listagem de produtos  
-- Atualização de dados  
-- Remoção de registros  
-- Estrutura RESTful  
-
----
-
-## 🛠️ Tecnologias utilizadas
-
-- Java  
-- Spring Boot  
-- JPA / Hibernate  
-- MySQL (ou outro banco relacional)  
-- Maven  
+* Java 17+
+* Spring Boot
+* Spring Data JPA
+* Spring Security
+* MySQL
+* Maven
+* Swagger (Springdoc OpenAPI)
 
 ---
 
-## 📂 Estrutura do projeto
+## 📌 Funcionalidades
 
-```
-api-bazar/
-│── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com.seuprojeto.bazar/
-│   │   │       ├── controller/
-│   │   │       ├── service/
-│   │   │       ├── repository/
-│   │   │       ├── model/
-│   │   │       └── dto/
-│   │   └── resources/
-│   │       ├── application.properties
-│── pom.xml
-```
+* 👤 Cadastro e autenticação de usuários
+* 👕 Gerenciamento de roupas (CRUD completo)
+* 🔄 Controle de movimentações (entrada e saída de produtos)
+* 🔐 Criptografia de senha com BCrypt
+* 📄 Paginação e ordenação de resultados
+* 📑 Documentação interativa com Swagger
 
 ---
 
 ## ⚙️ Como rodar o projeto
 
-### 🔧 Pré-requisitos
-
-- Java 17+
-- Maven
-- MySQL (ou outro banco configurado)
-
-### ▶️ Passos
-
-1. Clone o repositório:
-```
+```bash
+# Clonar o repositório
 git clone https://github.com/gustavogaldinojj/api-bazar.git
-```
 
-2. Acesse o diretório:
-```
+# Entrar na pasta
 cd api-bazar
+
+# Rodar a aplicação
+./mvnw spring-boot:run
 ```
 
-3. Configure o banco de dados no `application.properties`
-
-4. Execute o projeto:
-```
-.\mvnw spring-boot:run
-```
 ---
 
-## 📡 Endpoints (exemplo)
+---
+
+## 📑 Documentação da API (Swagger)
+
+Após iniciar a aplicação, acesse:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+ou
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+Através do Swagger você pode:
+
+* Visualizar todos os endpoints
+* Testar requisições diretamente
+* Ver parâmetros e respostas da API
+
+---
+
+## 🔐 Autenticação
+
+A API possui autenticação baseada em login.
+
+### 🔑 Login
+
+```http
+POST /auth/login
+```
+
+### Body da requisição:
+
+```json
+{
+  "email": "usuario@email.com",
+  "senha": "123456"
+}
+```
+
+---
+
+## 📦 Endpoints principais
 
 ### 👤 Usuários
 
-| Método | Endpoint         | Descrição        |
-|--------|----------------|------------------|
-| GET    | /usuarios      | Lista usuários   |
-| POST   | /usuarios      | Cria usuário     |
-| PUT    | /usuarios/{id} | Atualiza usuário |
-| DELETE | /usuarios/{id} | Remove usuário   |
-
-### 📦 Produtos
-
-| Método | Endpoint         | Descrição        |
-|--------|----------------|------------------|
-| GET    | /produtos      | Lista produtos   |
-| POST   | /produtos      | Cria produto     |
-| PUT    | /produtos/{id} | Atualiza produto |
-| DELETE | /produtos/{id} | Remove produto   |
-
----
-
-### Testes Unitarios
-```
-./mvnw test -Dtest=RoupaServiceTest  
+```http
+GET /usuarios
+POST /usuarios
+GET /usuarios/{id}
+PUT /usuarios/{id}
+DELETE /usuarios/{id}
 ```
 
-## 🔐 Segurança
+#### Paginação e ordenação:
 
-- Estrutura preparada para integração com autenticação (JWT ou Spring Security)
-- Validações com Bean Validation (`@Valid`)
-
----
-
-## 🧪 Melhorias futuras
-
-- Implementação de autenticação e autorização  
-- Relatórios de vendas  
-- Controle de estoque  
-- Integração com front-end Angular  
-- Testes unitários  
+```http
+GET /usuarios?page=0&size=10&sort=nome,asc
+```
 
 ---
 
-## 📄 Licença
+### 👕 Roupas
 
-Este projeto está sob a licença MIT.
+```http
+GET /roupas
+POST /roupas
+PUT /roupas/{id}
+DELETE /roupas/{id}
+```
 
 ---
+
+### 🔄 Movimentações
+
+```http
+GET /movimentacoes
+POST /movimentacoes
+```
+
+---
+
+## 📄 Exemplo de requisição
+
+```json
+{
+  "nome": "Camiseta",
+  "descricao": "Camiseta preta",
+  "preco": 49.90,
+  "quantidade": 10
+}
+```
+
+---
+
+## 🧪 Testes
+
+Para executar os testes unitários:
+
+```bash
+./mvnw test
+```
