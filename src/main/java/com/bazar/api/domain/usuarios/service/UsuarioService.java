@@ -30,8 +30,12 @@ public class UsuarioService {
     }
 
     public Usuario atualizar(Long id, DadosAtualizaUsuario dados) {
-        var usuario = repository.getReferenceById(id);
+
+        var usuario = repository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou inativo"));
+
         usuario.atualizarInformacoes(dados);
+
         return usuario;
     }
 

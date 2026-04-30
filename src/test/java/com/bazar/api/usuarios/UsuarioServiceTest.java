@@ -96,7 +96,7 @@ public class UsuarioServiceTest {
     @DisplayName("atualizar: deve chamar usuario.atualizarInformacoes() com os dados recebidos")
     void deveAtualizarUsuarioComSucesso() {
         var usuarioMock = mock(Usuario.class);
-        var dados = new DadosAtualizaUsuario(1L, "Gustavo", "gustavoalves@gmail.com", "atendendte",
+        var dados = new DadosAtualizaUsuario("Gustavo", "gustavoalves@gmail.com", "atendendte",
                 new DadosEndereco("Morada do sol", "Sol Nascente", "05281110", "barabas", "SP", "casa", "31"));
         when(repository.getReferenceById(1L)).thenReturn(usuarioMock);
 
