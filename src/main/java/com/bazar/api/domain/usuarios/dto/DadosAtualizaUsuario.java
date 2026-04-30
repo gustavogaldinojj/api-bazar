@@ -7,5 +7,6 @@ public record DadosAtualizaUsuario(
         Long id,
         String nome,
         String email,
+        String nivelUsuario,
         DadosEndereco endereco) {
 }

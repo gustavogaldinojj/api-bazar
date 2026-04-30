@@ -14,6 +14,8 @@ public record DadosCadastroUsuario(
         @Email
         String email,
         @NotNull
+        String nivelUsuario,
+        @NotNull
         @Valid
         DadosEndereco endereco) {
 }

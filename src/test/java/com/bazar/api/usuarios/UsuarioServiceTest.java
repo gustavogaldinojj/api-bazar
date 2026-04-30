@@ -38,7 +38,7 @@ public class UsuarioServiceTest {
 
     // ─── helper para criar DTO sem repetição ────────────────────────────────
     private DadosCadastroUsuario dadosCadastroUsuario(){
-        return new DadosCadastroUsuario("Gustavo", "12345", "gustavogaldino@gmail.com",
+        return new DadosCadastroUsuario("Gustavo", "12345", "gustavogaldino@gmail.com", "Atendente",
                 new DadosEndereco("Morada do sol", "Sol Nascente", "05281110", "São Paulo", "SP", "casa", "31"));
     }
 
@@ -96,7 +96,7 @@ public class UsuarioServiceTest {
     @DisplayName("atualizar: deve chamar usuario.atualizarInformacoes() com os dados recebidos")
     void deveAtualizarUsuarioComSucesso() {
         var usuarioMock = mock(Usuario.class);
-        var dados = new DadosAtualizaUsuario(1L, "Gustavo", "gustavoalves@gmail.com",
+        var dados = new DadosAtualizaUsuario(1L, "Gustavo", "gustavoalves@gmail.com", "atendendte",
                 new DadosEndereco("Morada do sol", "Sol Nascente", "05281110", "barabas", "SP", "casa", "31"));
         when(repository.getReferenceById(1L)).thenReturn(usuarioMock);
 

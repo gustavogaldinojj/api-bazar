@@ -28,6 +28,7 @@ public class Usuario implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     private String senha;
+    private String nivelUsuario;
     @Embedded
     private Endereco endereco;
     private boolean ativo;
@@ -37,6 +38,7 @@ public class Usuario implements UserDetails {
         this.nome = dados.nome();
         this.email = dados.email();
         this.senha = new BCryptPasswordEncoder().encode(dados.senha());
+        this.nivelUsuario = dados.nivelUsuario();
         this.endereco = new Endereco(dados.endereco());
     }
 
@@ -55,6 +57,8 @@ public class Usuario implements UserDetails {
     public String getSenha() {
         return senha;
     }
+
+    public String getNivelUsuario(){return nivelUsuario;}
 
     public Endereco getEndereco() {
         return endereco;
