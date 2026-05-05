@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,5 +57,23 @@ public class MovimentacaoController {
     @GetMapping("/relatorios/por-roupa/{id}")
     public ResponseEntity<Integer> totalPorRoupa(@PathVariable Long id) {
         return ResponseEntity.ok(service.totalVendidoPorRoupa(id));
+    }
+
+    @GetMapping("/relatorios/faturamento")
+    public ResponseEntity<BigDecimal> faturamentoTotal() {
+        return ResponseEntity.ok(service.faturamentoTotal());
+    }
+
+    @GetMapping("/relatorios/faturamento/por-periodo")
+    public ResponseEntity<BigDecimal> faturamentoPorPeriodo(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim
+    ) {
+        return ResponseEntity.ok(service.faturamentoPorPeriodo(inicio, fim));
+    }
+
+    @GetMapping("/relatorios/faturamento/por-roupa/{id}")
+    public ResponseEntity<BigDecimal> faturamentoPorRoupa(@PathVariable Long id) {
+        return ResponseEntity.ok(service.faturamentoPorRoupa(id));
     }
 }

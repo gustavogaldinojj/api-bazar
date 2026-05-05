@@ -11,6 +11,8 @@ public record DadosCadastroRoupa(
         @NotBlank
         String nome,
         @NotBlank
+        String categoria,
+        @NotBlank
         String tamanho,
         @NotBlank
         String cor,

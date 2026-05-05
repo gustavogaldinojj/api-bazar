@@ -25,6 +25,7 @@ public class Roupa {
 
     private String nome;
     private String tamanho;
+    private String categoria;
     private String cor;
     private BigDecimal preco;
 
@@ -40,6 +41,7 @@ public class Roupa {
         this.nome = dados.nome();
         this.tamanho = dados.tamanho();
         this.cor = dados.cor();
+        this.categoria = dados.categoria();
         this.preco = dados.preco();
         this.quantidade = dados.quantidade();
         this.ativo = true;
@@ -49,6 +51,7 @@ public class Roupa {
         if (dados.nome() != null) this.nome = dados.nome();
         if (dados.tamanho() != null) this.tamanho = dados.tamanho();
         if (dados.cor() != null) this.cor = dados.cor();
+        if (dados.categoria() != null) this.categoria = dados.categoria();
         if (dados.preco() != null) this.preco = dados.preco();
         if (dados.quantidade() != null) this.quantidade = dados.quantidade();
     }

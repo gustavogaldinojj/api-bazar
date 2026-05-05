@@ -7,7 +7,9 @@ import com.bazar.api.domain.roupas.model.Roupa;
 import com.bazar.api.domain.roupas.repository.RoupaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MovimentacaoService {
     @Autowired
     MovimentacaoRepository movimentacaoRepository;
 
+    @Transactional
     public Movimentacao movimentacao(Long roupaId, TipoMovimentacao tipo, Integer quantidade){
 
         Roupa roupa = roupaRepository.findById(roupaId)
@@ -39,6 +42,7 @@ public class MovimentacaoService {
         mov.setTipo(tipo);
         mov.setQuantidade(quantidade);
         mov.setData(LocalDateTime.now());
+        mov.setValorUnitario(roupa.getPreco());
 
         roupaRepository.save(roupa);
         return movimentacaoRepository.save(mov);
@@ -66,6 +70,18 @@ public class MovimentacaoService {
         return movimentacaoRepository.totalVendidoPorRoupa(
                 TipoMovimentacao.SAIDA, roupaId
         );
+    }
+
+    public BigDecimal faturamentoTotal() {
+        return movimentacaoRepository.faturamentoTotal(TipoMovimentacao.SAIDA);
+    }
+
+    public BigDecimal faturamentoPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+        return movimentacaoRepository.faturamentoPorPeriodo(TipoMovimentacao.SAIDA, inicio, fim);
+    }
+
+    public BigDecimal faturamentoPorRoupa(Long roupaId) {
+        return movimentacaoRepository.faturamentoPorRoupa(TipoMovimentacao.SAIDA, roupaId);
     }
 
 }

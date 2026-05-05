@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,4 +50,33 @@ public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long
             @Param("roupaId") Long roupaId
     );
 
+    @Query("""
+        SELECT COALESCE(SUM(m.valorUnitario * m.quantidade), 0)
+        FROM Movimentacao m
+        WHERE m.tipo = :tipo
+    """)
+    BigDecimal faturamentoTotal(@Param("tipo") TipoMovimentacao tipo);
+
+    @Query("""
+        SELECT COALESCE(SUM(m.valorUnitario * m.quantidade), 0)
+        FROM Movimentacao m
+        WHERE m.tipo = :tipo
+        AND m.data BETWEEN :inicio AND :fim
+    """)
+    BigDecimal faturamentoPorPeriodo(
+            @Param("tipo") TipoMovimentacao tipo,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(m.valorUnitario * m.quantidade), 0)
+        FROM Movimentacao m
+        WHERE m.tipo = :tipo
+        AND m.roupa.id = :roupaId
+    """)
+    BigDecimal faturamentoPorRoupa(
+            @Param("tipo") TipoMovimentacao tipo,
+            @Param("roupaId") Long roupaId
+    );
 }

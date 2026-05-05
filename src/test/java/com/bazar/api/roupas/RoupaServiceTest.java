@@ -35,7 +35,7 @@ class RoupaServiceTest {
 
     // ─── helper para criar DTO sem repetição ────────────────────────────────
     private DadosCadastroRoupa dadosValidos() {
-        return new DadosCadastroRoupa("Camisa", "M", "Azul", new BigDecimal("59.90"), 10);
+        return new DadosCadastroRoupa("Camisa polo", "M", "Camiseta", "Azul", new BigDecimal("59.90"), 10);
     }
 
     @Test
@@ -92,7 +92,7 @@ class RoupaServiceTest {
     @DisplayName("atualizar: deve chamar roupa.atualizar() com os dados recebidos")
     void deveAtualizarRoupaComSucesso() {
         var roupaMock = mock(Roupa.class);
-        var dados = new DadosAtualizaRoupa(1L, "Calça", "G", "Preta", new BigDecimal("89.90"), 2);
+        var dados = new DadosAtualizaRoupa(1L, "Calça jeans", "G", "Calça", "Preta", new BigDecimal("89.90"), 2);
         when(repository.getReferenceById(1L)).thenReturn(roupaMock);
 
         service.atualizar(1L, dados);

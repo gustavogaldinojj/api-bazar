@@ -5,13 +5,15 @@ import com.bazar.api.domain.roupas.model.Roupa;
 import java.math.BigDecimal;
 
 public record DadosDetalhamentoRoupa(
+        Long id,
         String nome,
         String tamanho,
+        String categoria,
         String cor,
         BigDecimal preco,
         Integer quantidade
 ) {
     public DadosDetalhamentoRoupa(Roupa roupa){
-        this(roupa.getNome(), roupa.getTamanho(), roupa.getCor(), roupa.getPreco(), roupa.getQuantidade());
+        this(roupa.getId(), roupa.getNome(), roupa.getCategoria() ,roupa.getTamanho(), roupa.getCor(), roupa.getPreco(), roupa.getQuantidade());
     }
 }
