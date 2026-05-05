@@ -1,5 +1,6 @@
 package com.bazar.api.domain.movimentacao.controller;
 
+import com.bazar.api.domain.movimentacao.dto.DadosListarMovimentacao;
 import com.bazar.api.domain.movimentacao.dto.DadosMovimentacao;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
 import com.bazar.api.domain.movimentacao.service.MovimentacaoService;
@@ -32,13 +33,24 @@ public class MovimentacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Movimentacao>> buscar(){
-        return ResponseEntity.ok(service.listarTodas());
+    public ResponseEntity<List<DadosListarMovimentacao>> buscar(){
+        var lista = service.listarTodas()
+                .stream()
+                .map(DadosListarMovimentacao::new)
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/roupa/{id}")
-    public ResponseEntity<List<Movimentacao>> listarPorRoupa(@PathVariable Long id) {
-        return ResponseEntity.ok(service.listarPorRoupa(id));
+    public ResponseEntity<List<DadosListarMovimentacao>> listarPorRoupa(@PathVariable Long id) {
+
+        var lista = service.listarPorRoupa(id)
+                .stream()
+                .map(DadosListarMovimentacao::new)
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/relatorios/total-vendido")

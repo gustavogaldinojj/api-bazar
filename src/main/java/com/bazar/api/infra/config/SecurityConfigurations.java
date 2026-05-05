@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,44 +20,51 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfigurations {
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            return http
-                    .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 ESSENCIAL
-                    .csrf(csrf -> csrf.disable())
+    @Autowired
+    private SecurityFilter securityFilter; // ✅ INJETADO PELO SPRING
 
-                    .sessionManagement(sess ->
-                            sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    )
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
 
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                            .requestMatchers("/auth/**").permitAll()
-                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                            .requestMatchers("/usuarios/**").permitAll()
-                            .requestMatchers("/roupas/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                            .anyRequest().authenticated()
-                    )
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/usuarios/**").permitAll()
+                        .requestMatchers("/roupas/**").permitAll()
 
-                    .addFilterBefore(new SecurityFilter(), UsernamePasswordAuthenticationFilter.class)
+                        // 👉 ADICIONA ISSO PRA TESTE
+                        .requestMatchers("/movimentacoes/**").permitAll()
 
-                    .build();
-        }
+                        .anyRequest().authenticated()
+                )
 
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration config = new CorsConfiguration();
+                // 🔥 AQUI ESTÁ A CORREÇÃO
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 
-            config.setAllowedOrigins(List.of("http://localhost:5173")); // front
-            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            config.setAllowedHeaders(List.of("*"));
-            config.setAllowCredentials(true);
+                .build();
+    }
 
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", config);
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
 
-            return source;
-        }
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+    }
 }

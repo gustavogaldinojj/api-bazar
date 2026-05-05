@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -19,6 +21,11 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public SecurityFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
+        this.tokenService = tokenService;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -30,6 +37,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null){
             try {
                 var email = tokenService.validarToken(token);
+
+                    if (email != null) {
+                        var usuario = usuarioRepository.findByEmail(email)
+                                .orElse(null);
+
+                        if (usuario != null) {
+                            var authentication = new UsernamePasswordAuthenticationToken(
+                                    usuario,
+                                    null,
+                                    usuario.getAuthorities()
+                            );
+                        }
+                    }
 
                 var usuario = usuarioRepository.findByEmail(email)
                         .orElse(null);
@@ -45,8 +65,8 @@ public class SecurityFilter extends OncePerRequestFilter {
                 }
 
             } catch (Exception e) {
-                // token inválido → ignora e segue sem autenticação
-            }
+                    System.out.println("ERRO NO TOKEN: " + e.getMessage());
+                    }
         }
 
         filterChain.doFilter(request, response);
