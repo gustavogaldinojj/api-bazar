@@ -1,5 +1,6 @@
 package com.bazar.api.domain.movimentacao.controller;
 
+import com.bazar.api.domain.movimentacao.dto.DadosGrafico;
 import com.bazar.api.domain.movimentacao.dto.DadosListarMovimentacao;
 import com.bazar.api.domain.movimentacao.dto.DadosMovimentacao;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
@@ -87,5 +88,10 @@ public class MovimentacaoController {
     @GetMapping("/relatorios/faturamento/por-roupa/{id}")
     public ResponseEntity<BigDecimal> faturamentoPorRoupa(@PathVariable Long id) {
         return ResponseEntity.ok(service.faturamentoPorRoupa(id));
+    }
+
+    @GetMapping("/relatorios/vendas-por-mes")
+    public ResponseEntity<List<DadosGrafico>> vendasPorMes() {
+        return ResponseEntity.ok(service.vendasPorMes());
     }
 }

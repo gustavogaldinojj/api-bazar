@@ -1,5 +1,6 @@
 package com.bazar.api.domain.movimentacao.service;
 
+import com.bazar.api.domain.movimentacao.dto.DadosGrafico;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
 import com.bazar.api.domain.movimentacao.model.TipoMovimentacao;
 import com.bazar.api.domain.movimentacao.repository.MovimentacaoRepository;
@@ -82,6 +83,10 @@ public class MovimentacaoService {
 
     public BigDecimal faturamentoPorRoupa(Long roupaId) {
         return movimentacaoRepository.faturamentoPorRoupa(TipoMovimentacao.SAIDA, roupaId);
+    }
+
+    public List<DadosGrafico> vendasPorMes(){
+        return movimentacaoRepository.vendasPorMes(TipoMovimentacao.SAIDA);
     }
 
 }

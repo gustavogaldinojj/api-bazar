@@ -1,5 +1,6 @@
 package com.bazar.api.domain.movimentacao.repository;
 
+import com.bazar.api.domain.movimentacao.dto.DadosGrafico;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
 import com.bazar.api.domain.movimentacao.model.TipoMovimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -79,4 +80,16 @@ public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long
             @Param("tipo") TipoMovimentacao tipo,
             @Param("roupaId") Long roupaId
     );
+
+    @Query("""
+    SELECT new com.bazar.api.domain.movimentacao.dto.DadosGrafico(
+        TO_CHAR(m.data, 'YYYY-MM'),
+        SUM(m.quantidade)
+    )
+    FROM Movimentacao m
+    WHERE m.tipo = :tipo
+    GROUP BY TO_CHAR(m.data, 'YYYY-MM')
+    ORDER BY 1
+""")
+    List<DadosGrafico> vendasPorMes(TipoMovimentacao tipo);
 }
