@@ -4,6 +4,7 @@ import com.bazar.api.domain.roupas.dto.DadosAtualizaRoupa;
 import com.bazar.api.domain.roupas.dto.DadosCadastroRoupa;
 import com.bazar.api.domain.roupas.model.Roupa;
 import com.bazar.api.domain.roupas.repository.RoupaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class RoupaService {
                 .orElseThrow(() -> new RuntimeException("Roupa não encontrada ou inativa"));
     }
 
+    @Transactional
     public Roupa atualizar(Long id, DadosAtualizaRoupa dados) {
         var roupa = repository.getReferenceById(id);
         roupa.atualizar(dados);

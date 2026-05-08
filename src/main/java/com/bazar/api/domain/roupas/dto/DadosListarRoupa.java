@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 public record DadosListarRoupa(
         Long id,
         String nome,
-        String tamanho,
         String categoria,
+        String tamanho,
         String cor,
         BigDecimal preco,
         Integer quantidade

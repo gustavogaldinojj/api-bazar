@@ -1,7 +1,9 @@
 package com.bazar.api.domain.movimentacao.service;
 
 import com.bazar.api.domain.movimentacao.dto.DadosGrafico;
+import com.bazar.api.domain.movimentacao.model.AgrupamentoGrafico;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
+import com.bazar.api.domain.movimentacao.model.TipoGrafico;
 import com.bazar.api.domain.movimentacao.model.TipoMovimentacao;
 import com.bazar.api.domain.movimentacao.repository.MovimentacaoRepository;
 import com.bazar.api.domain.roupas.model.Roupa;
@@ -34,8 +36,15 @@ public class MovimentacaoService {
                 throw new RuntimeException("Estoque insuficiente");
             }
             roupa.setQuantidade(roupa.getQuantidade() - quantidade);
+            if (roupa.getQuantidade() <= 0) {
+                roupa.excluir(); // chama o método já existente na entidade que seta ativo = false
+            }
         } else {
             roupa.setQuantidade(roupa.getQuantidade() + quantidade);
+
+            if (!roupa.getAtivo()) {
+                roupa.setAtivo(true);
+            }
         }
 
         Movimentacao mov = new Movimentacao();
@@ -85,8 +94,66 @@ public class MovimentacaoService {
         return movimentacaoRepository.faturamentoPorRoupa(TipoMovimentacao.SAIDA, roupaId);
     }
 
-    public List<DadosGrafico> vendasPorMes(){
-        return movimentacaoRepository.vendasPorMes(TipoMovimentacao.SAIDA);
+    public List<DadosGrafico> gerarGrafico(
+            TipoGrafico tipo,
+            AgrupamentoGrafico agrupamento,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    ) {
+
+        return switch (tipo) {
+
+            case VENDAS -> gerarGraficoVendas(
+                    agrupamento,
+                    inicio,
+                    fim
+            );
+
+            case FATURAMENTO -> gerarGraficoFaturamento(
+                    agrupamento,
+                    inicio,
+                    fim
+            );
+        };
     }
 
+    private List<DadosGrafico> gerarGraficoVendas(
+            AgrupamentoGrafico agrupamento,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    ) {
+
+        return switch (agrupamento) {
+
+            case DIA -> movimentacaoRepository.vendasPorDia(
+                    TipoMovimentacao.SAIDA,
+                    inicio,
+                    fim
+            );
+
+            case MES -> movimentacaoRepository.vendasPorMes(
+                    TipoMovimentacao.SAIDA
+            );
+        };
+    }
+
+    private List<DadosGrafico> gerarGraficoFaturamento(
+            AgrupamentoGrafico agrupamento,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    ) {
+
+        return switch (agrupamento) {
+
+            case DIA -> movimentacaoRepository.faturamentoPorDia(
+                    TipoMovimentacao.SAIDA,
+                    inicio,
+                    fim
+            );
+
+            case MES -> movimentacaoRepository.faturamentoPorMes(
+                    TipoMovimentacao.SAIDA
+            );
+        };
+    }
 }

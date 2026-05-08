@@ -54,6 +54,10 @@ public class Roupa {
         if (dados.categoria() != null) this.categoria = dados.categoria();
         if (dados.preco() != null) this.preco = dados.preco();
         if (dados.quantidade() != null) this.quantidade = dados.quantidade();
+
+        if (this.quantidade <= 0){
+            this.ativo = false;
+        }
     }
 
     public void excluir() {

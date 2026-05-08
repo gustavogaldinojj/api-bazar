@@ -3,7 +3,9 @@ package com.bazar.api.domain.movimentacao.controller;
 import com.bazar.api.domain.movimentacao.dto.DadosGrafico;
 import com.bazar.api.domain.movimentacao.dto.DadosListarMovimentacao;
 import com.bazar.api.domain.movimentacao.dto.DadosMovimentacao;
+import com.bazar.api.domain.movimentacao.model.AgrupamentoGrafico;
 import com.bazar.api.domain.movimentacao.model.Movimentacao;
+import com.bazar.api.domain.movimentacao.model.TipoGrafico;
 import com.bazar.api.domain.movimentacao.service.MovimentacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -90,8 +92,22 @@ public class MovimentacaoController {
         return ResponseEntity.ok(service.faturamentoPorRoupa(id));
     }
 
-    @GetMapping("/relatorios/vendas-por-mes")
-    public ResponseEntity<List<DadosGrafico>> vendasPorMes() {
-        return ResponseEntity.ok(service.vendasPorMes());
+    @GetMapping("/relatorios/grafico")
+    public ResponseEntity<List<DadosGrafico>> grafico(
+            @RequestParam TipoGrafico tipo,
+            @RequestParam AgrupamentoGrafico agrupamento,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime inicio,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime fim
+    ) {
+
+        return ResponseEntity.ok(
+                service.gerarGrafico(tipo, agrupamento, inicio, fim)
+        );
     }
 }
