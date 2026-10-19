@@ -42,6 +42,30 @@ cd api-bazar
 
 ---
 
+## 🐳 Rodando com Docker
+
+A aplicação e o banco PostgreSQL rodam totalmente containerizados via Docker Compose.
+
+```bash
+# (opcional) copie o .env.example e ajuste as credenciais
+cp .env.example .env
+
+# Build + start da API e do banco
+docker compose up --build -d
+
+# Acompanhar os logs da API
+docker compose logs -f api
+
+# Parar os containers
+docker compose down
+```
+
+A API fica disponível em `http://localhost:8080` e o Postgres é exposto na porta `5433` do host (configurável via `DB_HOST_PORT` no `.env`, útil se a 5432 já estiver em uso por outro serviço).
+
+Variáveis de ambiente configuráveis (ver `.env.example`): `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `JPA_DDL_AUTO`.
+
+---
+
 ---
 
 ## 📑 Documentação da API (Swagger)
