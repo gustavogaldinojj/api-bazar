@@ -171,3 +171,11 @@ Para executar os testes unitários:
 ```bash
 ./mvnw test
 ```
+
+## Contribuidores
+
+- Victor de Goes Galasso     RA: G80AAJ0
+- Gustavo Alves Oliveira     RA: N08AJ5
+- Isabella Victorino dos Santos     RA: N094419
+- Guilherme Dias da Silva     RA: G863DJ0
+
